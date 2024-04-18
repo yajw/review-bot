@@ -15,13 +15,11 @@ const (
 type RateRecord struct {
 	ID         int64  `json:"id,omitempty"`
 	UserID     int64  `json:"user_id,omitempty"`
-	ItemID     int64  `json:"item_id,omitempty"`
-	Star       int    `json:"star,omitempty"`
 	Comment    string `json:"comment,omitempty"`
 	CreateTime int64  `json:"create_time"`
 }
 
-func CreateRateRecord(uid int64, itemID int64, star int, comment string) error {
+func CreateReviewRecord(uid int64, itemID int64, star int, comment string) error {
 	db, err := mysql.GetConnection()
 	if err != nil {
 		panic(err)
@@ -40,7 +38,7 @@ func CreateRateRecord(uid int64, itemID int64, star int, comment string) error {
 	return nil
 }
 
-func GetUserRateByUIDAndItemID(uid int64, itemIDs []int64) ([]*RateRecord, error) {
+func GetUserReviewByUIDAndItemID(uid int64, itemIDs []int64) ([]*RateRecord, error) {
 	if len(itemIDs) == 0 {
 		return nil, nil
 	}

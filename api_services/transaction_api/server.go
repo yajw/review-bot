@@ -4,6 +4,11 @@ import (
 	"log"
 	"net/http"
 	"sync"
+
+	"github.com/yajw/review-bot/api_services/transaction_api/create_txn"
+	"github.com/yajw/review-bot/api_services/transaction_api/review_form"
+	"github.com/yajw/review-bot/api_services/transaction_api/submit_txn_review"
+	"github.com/yajw/review-bot/api_services/transaction_api/transaction_list"
 )
 
 var (
@@ -12,8 +17,12 @@ var (
 
 func Start() {
 	once.Do(func() {
-		http.HandleFunc("/user/transaction/list", TransactionList)
-		http.HandleFunc("/user/transaction/review", TransactionReview)
+		http.HandleFunc("/transaction/list", transaction_list.TransactionList)
+		http.HandleFunc("/transaction/review/submit", submit_txn_review.SubmitTxnReviewHandler)
+		http.HandleFunc("/transaction/review/form", review_form.GetReviewForm)
+
+		// create order mock
+		http.HandleFunc("/transaction/create", create_txn.CreateTxn)
 
 		log.Fatal(http.ListenAndServe(":8080", nil))
 	})
