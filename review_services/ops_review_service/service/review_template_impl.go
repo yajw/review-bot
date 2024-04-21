@@ -15,7 +15,7 @@ var (
 		},
 		"chat.order": {
 			SceneKey:   "chat.order",
-			Template:   "%s rate our logistic service here",
+			Template:   "Hi %s, kindly rate our logistic service here",
 			CreateTime: time.Now(),
 		},
 		"default": {

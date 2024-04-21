@@ -3,8 +3,10 @@ package command_handlers
 import (
 	"fmt"
 	"net/url"
+	"strconv"
 
 	botapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	"github.com/yajw/review-bot/libs/logger"
 	"github.com/yajw/review-bot/review_services/customer_review_service"
 )
 
@@ -34,7 +36,11 @@ func buildSchema(path string, args map[string]interface{}) string {
 }
 
 func MockReceiveProduct(bot *botapi.BotAPI, msg *botapi.Message) error {
-	sceneID := msg.CommandArguments()[0]
+	sceneID, err := strconv.ParseInt(string(msg.CommandArguments()[0]), 10, 64)
+	if err != nil {
+		logger.Error("parse sid err:%v", err)
+		return err
+	}
 	return ReceiveProduct(bot, msg.Chat.ID, msg.Chat.UserName, "chat.order", int64(sceneID))
 }
 
