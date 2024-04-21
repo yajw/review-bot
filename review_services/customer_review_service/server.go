@@ -6,7 +6,7 @@ import (
 )
 
 func Start() {
-	mysql.StartServer()
+	mysql.ConnectDB()
 }
 
 func GetReviewService() service.ReviewService {

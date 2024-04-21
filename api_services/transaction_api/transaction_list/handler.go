@@ -1,7 +1,6 @@
 package transaction_list
 
 import (
-	"encoding/json"
 	"errors"
 	"net/http"
 	"strconv"
@@ -65,11 +64,10 @@ func TransactionList(w http.ResponseWriter, r *http.Request) {
 	}
 
 	resp := &TxnListResponse{TxnList: txnList}
-	bytes, _ := json.Marshal(resp)
-	w.Write(bytes)
+	common.JsonResp(w, resp)
 }
 
-func convert(order *order_service.Order) *OrderInfo {
+func convert(order *order_service.UserOrder) *OrderInfo {
 	if order == nil {
 		return nil
 	}

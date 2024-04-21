@@ -6,35 +6,6 @@ import (
 	"github.com/yajw/review-bot/review_services/common"
 )
 
-type RateRequest struct {
-	UserID int64
-	ItemID int64
-
-	Star    int    // 1-5 stars
-	Comment string // user left some comment here
-}
-
-type RateResponse struct{}
-
-type GetUserRatesRequest struct {
-	UserID int64
-
-	ItemIDList []int64
-}
-
-type RateInfo struct {
-	ID         int64
-	UserID     int64
-	ItemID     int64
-	Star       int
-	Comment    string
-	CreateTime time.Time
-}
-
-type GetUserRatesResponse struct {
-	UserRates map[int64]*RateInfo
-}
-
 type SubmitReviewRequest struct {
 	SceneKey      string                 `json:"scene_key,omitempty"`
 	SceneID       int64                  `json:"scene_id,omitempty"`
@@ -44,7 +15,9 @@ type SubmitReviewRequest struct {
 	ExtraAttrs    map[string]interface{} `json:"extra_attrs,omitempty"`
 }
 
-type SubmitReviewResponse struct{}
+type SubmitReviewResponse struct {
+	ReviewID int64 `json:"review_id"`
+}
 
 // ReviewService is a RPC service for review
 type ReviewService interface {

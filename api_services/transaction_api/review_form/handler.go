@@ -1,7 +1,6 @@
 package review_form
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -20,9 +19,6 @@ func GetReviewForm(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp.Template = fmt.Sprintf(resp.Template, r.URL.Query().Get("userName"))
-
-	bytes, _ := json.Marshal(resp)
-	w.Write(bytes)
-	return
+	resp.Template = fmt.Sprintf(resp.Template, r.URL.Query().Get("user_name"))
+	common.JsonResp(w, resp)
 }

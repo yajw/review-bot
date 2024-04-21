@@ -23,7 +23,8 @@ func SubmitTxnReviewHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = customer_review_service.GetReviewService().SubmitReview(&service.SubmitReviewRequest{
+	var resp *service.SubmitReviewResponse
+	resp, err = customer_review_service.GetReviewService().SubmitReview(&service.SubmitReviewRequest{
 		SceneKey:      req.SceneKey,
 		SceneID:       req.SceneID,
 		UserID:        req.UID,
@@ -36,4 +37,6 @@ func SubmitTxnReviewHandler(w http.ResponseWriter, r *http.Request) {
 		common.HandleError(err, w)
 		return
 	}
+
+	common.JsonResp(w, resp)
 }

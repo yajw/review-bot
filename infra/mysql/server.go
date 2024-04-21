@@ -1,56 +1,64 @@
 package mysql
 
 import (
-	"database/sql"
+	"context"
 	"errors"
 	"sync"
+	"time"
 
-	"github.com/yajw/review-bot/libs/logger"
+	log "github.com/yajw/review-bot/libs/logger"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 var (
 	once sync.Once
 
-	db *sql.DB
+	db *gorm.DB
 )
 
-func StartServer() {
+func ConnectDB() {
 	once.Do(func() {
-		startServer()
+		connectDB()
 	})
 }
 
-func startServer() {
+func connectDB() {
+	dsn := "review_bot:7z$8K@k7@tcp(127.0.0.1:3306)/review?charset=utf8mb4&parseTime=True&loc=Local"
 	var err error
-	db, err = sql.Open("sqlite3", "file:review.db?cache=shared")
+	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{Logger: &sqlLogger{}})
 	if err != nil {
-		panic(err)
-	}
-	db.SetMaxOpenConns(1)
-
-	// index: (scene_key, scene_id)
-	// index: (uid, scene_key)
-	_, err = db.Exec("create table if not exists user_rates (" +
-		"id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-		"uid int, " +
-		"scene_key varchar(255), " +
-		"scene_id int, " +
-		"review varchar(256), " +
-		"attrs text, " +
-		"create_time int, " +
-		")",
-	)
-
-	if err != nil {
-		logger.Info("create table err: %v", err)
 		panic(err)
 	}
 }
 
-func GetConnection() (*sql.DB, error) {
+func GetConnection() (*gorm.DB, error) {
 	if db == nil {
 		return nil, errors.New("no connections available")
 	}
 
-	return db, nil
+	return db.Debug(), nil
+}
+
+type sqlLogger struct{}
+
+func (s *sqlLogger) LogMode(logger.LogLevel) logger.Interface {
+	return s
+}
+
+func (s *sqlLogger) Info(ctx context.Context, f string, args ...interface{}) {
+	log.Info(f, args)
+}
+
+func (s *sqlLogger) Warn(ctx context.Context, f string, args ...interface{}) {
+	log.Info(f, args)
+
+}
+
+func (s *sqlLogger) Error(ctx context.Context, f string, args ...interface{}) {
+	log.Error(f, args)
+}
+
+func (s *sqlLogger) Trace(ctx context.Context, begin time.Time, fc func() (sql string, rowsAffected int64), err error) {
 }
